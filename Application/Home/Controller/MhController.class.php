@@ -17,23 +17,325 @@ class MhController extends HomeController {
 	 */
     public function index(){
 
-        //var_dump(1523415);
-    	foreach ($this->_mhcate as $k=>$v){
+//        var_dump($this->_mhcate);
+        /*为导航列表手动添加icon-font, 后期可以修改后台增加icon-font的选项*/
+        $mhcate = $this->_mhcate;
+        $mhcate[1]['iconcode'] = "icon-RECENT_PROJECTS";
+        $mhcate[2]["iconcode"] = "icon-paixingbang";
+        $mhcate[3]["iconcode"] = "icon-shoujichongzhi";
+        $mhcate[4]["iconcode"] = "icon-fenlei1";
+        $indexData = [];
+        $banner = $this->_banner['config'];
+
+        $navList = [];
+        $mhcateList = [];
+    	foreach ($mhcate as $k=>$v){
+            if($v['show'] == 1 && $v['isshow']){
+                $navList[] = $v;
+            }
 			if($v['show'] == 2 && $v['isshow']){
-				$mhcate[$k]['name'] = $v['name'];
-				$mhcate[$k]['sort'] = $v['sort'];
-				$mhcate[$k]['list'] = M('mh_list')->where(array('mhcate'=>array('like','%'.$k.'%')))->order('id desc')->limit(6)->select();
-			}
+				$mhcateItem['name'] = $v['name'];
+                $mhcateItem['sort'] = $v['sort'];
+                $mhcateItem['list'] = M('mh_list')->where(array('mhcate'=>array('like','%'.$k.'%')))->order('id desc')->limit(6)->select();
+                $mhcateList[] = $mhcateItem;
+            }
+
 		}
-		$this->assign('mhcate',$mhcate);
+
+        $indexData['navList'] =  $navList;
+        $indexData['mhcateList'] =  $mhcateList;
+        $indexData['banner'] =  $banner;
+
+
+        /*$data = [
+            "code" => 200,
+            "msg" => "请求成功",
+            "result" => [
+                "act_info" => [
+                    [
+                        "icon_url" =>   "/static/images/act/1478761370286.png",
+                        "name" => "尚硅谷福利专区之111.1专区",
+                        "url" => "oper/147958.html"
+                    ],
+                    [
+                        "icon_url" =>   "/static/images/act/1478762941492.png",
+                        "name" => "尚硅谷福利社,黄金狗粮限量11.1抢",
+                        "url" => "oper/147958.html"
+                    ]
+                ],
+                "banner_info" => [
+                    [
+                        "image" =>   "/static/images/banner/image1.jpg",
+                        "option" => 3,
+                        "type" => 0,
+                        "value" => [
+                            "url" => "act2016211?cyc_app=1"
+                        ]
+                    ],
+                    [
+                        "image" =>   "/static/images/banner/image2.jpg",
+                        "option" => 2,
+                        "type" => 0,
+                        "value" => [
+                            "url" => "act2016211?cyc_app=1"
+                        ]
+                    ],
+                    [
+                        "image" =>   "/static/images/banner/image3.jpg",
+                        "option" => 1,
+                        "type" => 0,
+                        "value" => [
+                            "url" => "act2016211?cyc_app=1"
+                        ]
+                    ]
+                ],
+                "channel_info" => [
+                    [
+                        "channel_name" => "服饰",
+                        "image" =>   "/static/images/menu/menu-cyc.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "8"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "游戏",
+                        "image" =>   "/static/images/menu/menu-game.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "4"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "动漫",
+                        "image" =>   "/static/images/menu/menu-carttoon.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "3"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "装扮",
+                        "image" =>   "/static/images/menu/menu-cosplay.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "5"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "古风",
+                        "image" =>   "/static/images/menu/menu-oldage.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "6"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "文具",
+                        "image" =>   "/static/images/menu/menu-stationery.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "10"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "零食",
+                        "image" =>   "/static/images/menu/menu-snack.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "10"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "首饰",
+                        "image" =>   "/static/images/menu/menu-jewelry.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "12"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "漫展票务",
+                        "image" =>   "/static/images/menu/menu-collect.png",
+                        "option" => 2,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "9"
+                        ]
+                    ],
+                    [
+                        "channel_name" => "更多",
+                        "image" =>   "/static/images/menu/menu-more.png",
+                        "option" => 6,
+                        "type" => 1,
+                        "value" => [
+                            "channel_id" => "0"
+                        ]
+                    ]
+                ],
+                "seckill_info" => [
+                    "end_time" => "1479052800",
+                    "list" => [
+                        [
+                            "cover_price" => "20.00",
+                            "figure" =>   "/static/images/seckill/1478489000522.png",
+                            "name" => "尚硅谷购物节特供优惠券  满600-120优惠券",
+                            "origin_price" => "20.00",
+                            "product_id" => "7100"
+                        ],
+                        [
+                            "cover_price" => "10.00",
+                            "figure" =>   "/static/images/seckill/1478489035167.png",
+                            "name" => "尚硅谷购物节特供优惠券  满300-80优惠券",
+                            "origin_price" => "10.00",
+                            "product_id" => "7101"
+                        ],
+                        [
+                            "cover_price" => "5.00",
+                            "figure" =>   "/static/images/seckill/1478489878735.png",
+                            "name" => "尚硅谷购物节特供优惠券  满160-40优惠券",
+                            "origin_price" => "5.00",
+                            "product_id" => "7102"
+                        ],
+                        [
+                            "cover_price" => "49.00",
+                            "figure" =>   "/static/images/seckill/1475045805488.jpg",
+                            "name" => "【古风原创】 自动直柄伞 晴雨伞 【云鹤游】包邮  新增折叠伞",
+                            "origin_price" => "69.00",
+                            "product_id" => "9593"
+                        ],
+                        [
+                            "cover_price" => "5.00",
+                            "figure" =>   "/static/images/seckill/1478678511949.png",
+                            "name" => "尚硅谷购物节特供优惠券  满60-20优惠券",
+                            "origin_price" => "5.00",
+                            "product_id" => "10536"
+                        ],
+                        [
+                            "cover_price" => "49.00",
+                            "figure" =>   "/static/images/seckill/1438680345318.jpg",
+                            "name" => "【古风原创】 自动直柄伞 晴雨伞 【青竹词】包邮  新增折叠伞",
+                            "origin_price" => "59.00",
+                            "product_id" => "555"
+                        ]
+                    ],
+                    "start_time" => "1478772000"
+                ],
+                "recommend_info" => [
+                    [
+                        "cover_price" => "138.00",
+                        "figure" =>   "/static/images/recommend/1478873740576.jpg",
+                        "name" => "【尚硅谷】日常 萌系小天使卫衣--白色款",
+                        "product_id" => "10659"
+                    ],
+                    [
+                        "cover_price" => "138.00",
+                        "figure" =>   "/static/images/recommend/1478873369497.jpg",
+                        "name" => "【尚硅谷】日常 萌系小恶魔卫衣--黑色款",
+                        "product_id" => "10658"
+                    ],
+                    [
+                        "cover_price" => "32.00",
+                        "figure" =>   "/static/images/recommend/1478867468462.jpg",
+                        "name" => "预售【漫友文化】全职高手6 天闻角川  流地徽章 全新典藏版 蝴蝶蓝 猫树绘 赠精美大海报+首刷限定赠2017年活页台历",
+                        "product_id" => "10657"
+                    ],
+                    [
+                        "cover_price" => "18.00",
+                        "figure" =>   "/static/images/recommend/1467702094592.jpg",
+                        "name" => "【幸运星】烫金雪纺JSK的配件小物：手 套、项链",
+                        "product_id" => "10656"
+                    ],
+                    [
+                        "cover_price" => "178.00",
+                        "figure" =>   "/static/images/recommend/1469436115002.jpg",
+                        "name" => "【尚硅谷】妖狐图腾 阴阳师同人元素卫衣",
+                        "product_id" => "10655"
+                    ],
+                    [
+                        "cover_price" => "138.00",
+                        "figure" =>   "/static/images/recommend/1471315793182.jpg",
+                        "name" => "【尚硅谷】学院风 日常百搭 宽松长袖衬衫",
+                        "product_id" => "10654"
+                    ]
+                ],
+                "hot_info" => [
+                    [
+                        "cover_price" => "159.00",
+                        "figure" =>   "/static/images/hot/1477984921265.jpg",
+                        "name" => "现货【一方尘寰】剑侠情缘三剑三七秀 干将莫邪 90橙武仿烧蓝复古对簪",
+                        "product_id" => "9356"
+                    ],
+                    [
+                        "cover_price" => "159.00",
+                        "figure" =>   "/static/images/hot/1477984931882.jpg",
+                        "name" => "现货【一方尘寰】剑侠情缘三剑三七秀 干将莫邪 90橙武仿烧蓝复古对簪-特典版",
+                        "product_id" => "10391"
+                    ],
+                    [
+                        "cover_price" => "29.00",
+                        "figure" =>   "/static/images/hot/1452161899947.jpg",
+                        "name" => "【喵鹿酱】超萌 假透肉 拼接 踩脚过膝打底袜 裤袜-加绒保暖",
+                        "product_id" => "3831"
+                    ],
+                    [
+                        "cover_price" => "199.00",
+                        "figure" =>   "/static/images/hot/1447232577216.jpg",
+                        "name" => "【漫踪】原创 宫崎骏 龙猫 可爱雪地靴动漫保暖鞋周边冬季毛绒鞋子",
+                        "product_id" => "2691"
+                    ],
+                    [
+                        "cover_price" => "70.00",
+                        "figure" =>   "/static/images/hot/1474370572805.jpg",
+                        "name" => "【现货】【GIRLISM少女主义】 第4期 2016夏秋刊 lolita",
+                        "product_id" => "9414"
+                    ],
+                    [
+                        "cover_price" => "4.80",
+                        "figure" =>   "/static/images/hot/1465268743242.jpg",
+                        "name" => "【艾漫】全职高手-蜜饯系列",
+                        "product_id" => "6869"
+                    ],
+                    [
+                        "cover_price" => "143.10",
+                        "figure" =>   "/static/images/hot/1477360350123.png",
+                        "name" => "【高冷猫】暗黑系软妹病娇药丸少女秋装假俩件加厚卫衣帽衫  预售",
+                        "product_id" => "10136"
+                    ],
+                    [
+                        "cover_price" => "329.00",
+                        "figure" =>   "/static/images/hot/1467702094592.jpg",
+                        "name" => "【wacom】数位板画板ctl471手绘板bamboo电脑绘画电子绘图板ps",
+                        "product_id" => "7752"
+                    ]
+                ]
+            ]];*/
+
+//        $cateStr = 'a:9:{i:1;a:5:{s:3:"pic";s:53:"./Public/upload/images/2005/01/222033775181009822.png";s:3:"url";s:27:"/index.php?m=&c=Mh&a=mhlist";s:4:"name";s:12:"最近更新";s:4:"show";s:1:"1";s:6:"isshow";s:1:"1";}i:2;a:5:{s:3:"pic";s:53:"./Public/upload/images/2005/01/222037376346009630.png";s:3:"url";s:19:"?m=&c=Mh&a=book_hot";s:4:"name";s:6:"排行";s:4:"show";s:1:"1";s:6:"isshow";s:1:"1";}i:3;a:5:{s:3:"pic";s:53:"./Public/upload/images/2005/01/222039747303007125.png";s:3:"url";s:24:"/index.php?m=&c=Mh&a=pay";s:4:"name";s:6:"储值";s:4:"show";s:1:"1";s:6:"isshow";s:1:"1";}i:4;a:5:{s:3:"pic";s:53:"./Public/upload/images/2005/01/222042317105005107.png";s:3:"url";s:20:"?m=&c=Mh&a=book_cate";s:4:"name";s:6:"分类";s:4:"show";s:1:"1";s:6:"isshow";s:1:"1";}i:5;a:5:{s:3:"pic";s:53:"./Public/upload/images/1907/05/232012882809009452.jpg";s:3:"url";s:0:"";s:4:"name";s:15:"大家都在看";s:4:"show";s:1:"2";s:6:"isshow";s:1:"1";}i:6;a:5:{s:3:"pic";s:53:"./Public/upload/images/1907/05/232034486797005185.jpg";s:3:"url";s:0:"";s:4:"name";s:12:"热门推荐";s:4:"show";s:1:"2";s:6:"isshow";s:1:"1";}i:7;a:5:{s:3:"pic";s:53:"./Public/upload/images/1907/05/232035880202001930.jpg";s:3:"url";s:0:"";s:4:"name";s:12:"国漫精选";s:4:"show";s:1:"2";s:6:"isshow";s:1:"1";}i:8;a:5:{s:3:"pic";s:53:"./Public/upload/images/1907/05/232038363681003365.jpg";s:3:"url";s:0:"";s:4:"name";s:12:"韩漫漫画";s:4:"show";s:1:"2";s:6:"isshow";s:1:"1";}i:9;a:5:{s:3:"pic";s:53:"./Public/upload/images/1907/05/232041084563006260.jpg";s:3:"url";s:0:"";s:4:"name";s:12:"歪歪漫画";s:4:"show";s:1:"2";s:6:"isshow";s:1:"1";}}';
+//        $cateArr = unserialize($cateStr);
+
+
+        $this->ajaxReturn($indexData, '', JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+//        $this->ajaxReturn($data);
+
+		//$this->assign('mhcate',$mhcate);
 		$this->assign('mf',M('mh_list')->where(array('free_type'=>1))->order('id desc')->limit(10)->select());
-		
-		$dd = new \Common\Util\ddwechat();
+        //dump(M('mh_list')->where(array('free_type'=>1))->order('id desc')->limit(10)->select());
+        //return;
+		/*$dd = new \Common\Util\ddwechat();
         $dd->setParam($this->_mp);
         $jssdk = $dd->getsignpackage();
-        $this->assign('jssdk', $jssdk);
+        $this->assign('jssdk', $jssdk);*/
 		
-		$this->display();
+		//$this->display();
     }
 
 	
@@ -365,7 +667,7 @@ class MhController extends HomeController {
 	    		$lock = 2;
 	    	}
     	}
-    	
+    	//漫画分类, 古风/都市/热血等等
     	$arr_catename = array();
     	$cateids = $info['cateids'];
     	if(!empty($cateids)) {
@@ -374,10 +676,12 @@ class MhController extends HomeController {
     			!empty($cateid) && $arr_catename[] = get_mh_cate_name($cateid);
     		}
     	}
+        //获取漫画分集的第一话
     	$first = M('mh_episodes')->where("mhid={$mhid}")->order('ji_no asc')->find();
-    	
+    	//漫画一共多少话
 		$huas = M('mh_episodes')->where(array('mhid'=>$mhid))->count();
 		if($huas>15){
+            //创建漫画分集的数组
 			$huas_num = range(1,15);
 		}else{
 			$huas_num = range(1,$huas);
@@ -396,16 +700,17 @@ class MhController extends HomeController {
 		$guess = M('mh_list')->where(array('id'=>array('neq',$mhid)))->order('rand()')->limit(6)->select();
 		$this->assign('guess',$guess);
 		
-		//列出五天最新评论
+		//列出五条最新评论
 		$this->assign('coments',M('comment')->where(array('cid'=>$mhid,'type'=>"mh"))->order('create_time desc')->limit(5)->select());
-		$this->assign('mcounts',M('comment')->where(array('cid'=>$mhid,'type'=>"mh"))->count());
+		//评论总条数
+        $this->assign('mcounts',M('comment')->where(array('cid'=>$mhid,'type'=>"mh"))->count());
 		
     	$this->assign($asdata);
 		
-		$dd = new \Common\Util\ddwechat();
+		/*$dd = new \Common\Util\ddwechat();
         $dd->setParam($this->_mp);
         $jssdk = $dd->getsignpackage();
-        $this->assign('jssdk', $jssdk);
+        $this->assign('jssdk', $jssdk);*/
 		
 		$this->display();
     }
